@@ -1,0 +1,50 @@
+---------------
+create train_noise folder before running, stores pictures with noise there
+------------
+
+# load dogs vs cats dataset, reshape and save to a new file
+from os import listdir
+import numpy as np
+from numpy import asarray
+from numpy import save
+from keras.preprocessing.image import load_img
+from keras.preprocessing.image import img_to_array
+from matplotlib import pyplot as plt
+from matplotlib.image import imread
+from PIL import Image
+
+
+# define location of dataset
+def noisy(image):
+    mean=0
+    var=0.001
+    image = np.array(image/255, dtype=float)
+    noise = np.random.normal(mean, var ** 0.5, image.shape)
+    noise2 = np.random.normal(mean, var ** 0.5, image.shape)
+    out = image - noise
+    if out.min() < 0:
+        low_clip = -1
+        up_clip = 1
+    else:
+        low_clip = 0
+        up_clip = 1
+    out = np.clip(out, low_clip, up_clip)
+    out = np.uint8(out*255)
+    return out
+
+folder = 'train/'
+photos, labels = list(), list()
+i=0
+for file in listdir(folder):
+	# determine class
+		output = 0.0
+		if file.startswith('cat'):
+			output = 1.0
+		# load image
+		photo = load_img(folder + file, target_size=(200, 200))
+
+		# convert to numpy array
+		photo = img_to_array(photo)
+		photo = noisy(photo)
+		im = Image.fromarray(photo)
+		im.save("train_noise/n_" + file)
