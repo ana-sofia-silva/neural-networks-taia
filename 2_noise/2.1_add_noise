@@ -1,20 +1,11 @@
----------------
-create train_noise folder before running, stores pictures with noise there
-------------
-
-# load dogs vs cats dataset, reshape and save to a new file
+# load dogs vs cats dataset, reshape and add noise, save to two folders (cats and dogs)
 from os import listdir
+from os import mkdir
 import numpy as np
-from numpy import asarray
-from numpy import save
 from keras.preprocessing.image import load_img
 from keras.preprocessing.image import img_to_array
-from matplotlib import pyplot as plt
-from matplotlib.image import imread
 from PIL import Image
 
-
-# define location of dataset
 def noisy(image):
     mean=0
     var=0.001
@@ -32,19 +23,32 @@ def noisy(image):
     out = np.uint8(out*255)
     return out
 
-folder = 'train/'
-photos, labels = list(), list()
-i=0
-for file in listdir(folder):
-	# determine class
-		output = 0.0
-		if file.startswith('cat'):
-			output = 1.0
-		# load image
-		photo = load_img(folder + file, target_size=(200, 200))
+#make directories
+mkdir("n_dataset_dogs_vs_cats/")
+mkdir("n_dataset_dogs_vs_cats/train/")
+mkdir("n_dataset_dogs_vs_cats/train/cats")
+mkdir("n_dataset_dogs_vs_cats/train/dogs")
 
-		# convert to numpy array
-		photo = img_to_array(photo)
-		photo = noisy(photo)
-		im = Image.fromarray(photo)
-		im.save("train_noise/n_" + file)
+photos = list()
+
+folder = 'dataset_dogs_vs_cats/train/cats/'
+for file in listdir(folder):
+	# load image
+	photo = load_img(folder + file, target_size=(200, 200))
+	photo.save("n_dataset_dogs_vs_cats/train/cats/" + file)
+	# convert to numpy array
+	photo = img_to_array(photo)
+	photo = noisy(photo)
+	im = Image.fromarray(photo)
+	im.save("n_dataset_dogs_vs_cats/train/cats/n_" + file)
+
+folder = 'dataset_dogs_vs_cats/train/dogs/'
+for file in listdir(folder):
+	# load image
+	photo = load_img(folder + file, target_size=(200, 200))
+	photo.save("n_dataset_dogs_vs_cats/train/dogs/" + file)
+	# convert to numpy array
+	photo = img_to_array(photo)
+	photo = noisy(photo)
+	im = Image.fromarray(photo)
+	im.save("n_dataset_dogs_vs_cats/train/dogs/n_" + file)
