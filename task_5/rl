@@ -1,0 +1,24 @@
+import time
+import gym
+import random
+import numpy as np
+from tensorflow import keras
+from tensorflow.keras import layers
+
+
+class DogsvsCatsEnv(gym.Env):
+    def __init__(self, images_per_episode=1):
+        #super(DogsvsCatsEnv, self).__init__()
+        super().__init__()
+        # Two discrete actions (cat = 0, dog = 1)
+        self.action_space = gym.spaces.Discrete(2)
+        # image as input: already resized
+        self.observation_space = gym.spaces.Box(low=0, high=255,
+                                        shape=(200, 200, 3), dtype=np.uint8)
+        self.images_per_episode = images_per_episode
+
+    def step(self, action):
+        reward = int(action == self.expected_class)
+        obs = self._next_obs()
+        return obs, reward, {}
+    
