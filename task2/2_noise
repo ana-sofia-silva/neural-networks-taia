@@ -1,4 +1,5 @@
 # load dogs vs cats dataset, reshape and add noise, save to two folders (cats and dogs)
+
 from os import listdir
 from os import mkdir
 import numpy as np
